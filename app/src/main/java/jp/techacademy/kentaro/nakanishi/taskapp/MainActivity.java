@@ -9,8 +9,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.Date;
@@ -19,6 +22,7 @@ import java.util.ArrayList;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
@@ -34,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     };
     private ListView mListView;
     private TaskAdapter mTaskAdapter;
+    private EditText categoryEdit;
+    private Button categoryCheck;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,13 +124,43 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        categoryCheck = (Button) findViewById(R.id.category_check);
+        categoryCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(categoryEdit.getText().toString().equals("")){
+                    reloadListView();
+                }
+                else {
+                    reloadListView2();
+                }
+            }
+        });
+
         reloadListView();
+
+        categoryEdit = (EditText) findViewById(R.id.category_edit);
+
+
     }
 
 
     private void reloadListView() {
-        //Realmデータベースから、「すべてのデータを取得して新しい日時順に並べた結果」を取得
+
+        //Realmデータベースから、「検索に一致したすべてのデータを取得して新しい日時順に並べた結果」を取得
         RealmResults<Task> taskRealmResults = mRealm.where(Task.class).findAllSorted("date", Sort.DESCENDING);
+        //上記の結果を、taskListとしてセットする
+        mTaskAdapter.setTaskList(mRealm.copyFromRealm(taskRealmResults));
+        //TaskのListView用のアダプタに渡す
+        mListView.setAdapter(mTaskAdapter);
+        //表示を更新するために、アダプターにデータが変更されたことを知らせる
+        mTaskAdapter.notifyDataSetChanged();
+    }
+
+    private void reloadListView2(){
+
+        //Realmデータベースから、「検索に一致したすべてのデータを取得して新しい日時順に並べた結果」を取得
+        RealmResults<Task> taskRealmResults = mRealm.where(Task.class).equalTo("category",categoryEdit.getText().toString()).findAllSorted("date", Sort.DESCENDING);
         //上記の結果を、taskListとしてセットする
         mTaskAdapter.setTaskList(mRealm.copyFromRealm(taskRealmResults));
         //TaskのListView用のアダプタに渡す

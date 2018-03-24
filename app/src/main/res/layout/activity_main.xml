@@ -11,22 +11,34 @@
         android:layout_height="@android:dimen/notification_large_icon_height"
         android:theme="@style/AppTheme.AppBarOverlay">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/category_edit"
+                android:layout_width="279dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/toolbar"
+                android:layout_weight="1"
+                android:hint="検索カテゴリ"
+                android:textSize="24sp" />
+
+            <Button
+                android:id="@+id/category_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="sort" />
+        </LinearLayout>
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/fab_margin"
+            android:layout_height="24dp"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-        <TextView
-            android:id="@+id/category_check"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Category Check"
-            android:layout_below="@id/toolbar"
-
-            android:textSize="24sp" />
 
     </android.support.design.widget.AppBarLayout>
 
